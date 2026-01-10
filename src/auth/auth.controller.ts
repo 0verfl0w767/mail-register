@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Res,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import type { Response } from 'express';
@@ -14,13 +22,12 @@ export class AuthController {
   }
 
   @Post()
-  async register(@Body() dto: RegisterDto, @Res() res: Response) {
+  @HttpCode(HttpStatus.CREATED)
+  async register(@Body() dto: RegisterDto) {
     await this.authService.register(dto);
-    res.send(`
-      <script>
-        alert("회원가입 성공!");
-        location.href="/";
-      </script>
-    `);
+    return {
+      status: 'success',
+      message: '회원가입이 완료되었습니다.',
+    };
   }
 }
