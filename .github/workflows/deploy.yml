@@ -20,7 +20,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: 22
           script: |
-            cd /root/mail-register-nest || exit
+            cd /root/mail-register || exit
             git reset --hard
             git pull origin main
             cat > .env <<EOL
