@@ -1,13 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryColumn, Column } from 'typeorm';
 
 @Entity('mail_users')
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column({ unique: true })
+  @PrimaryColumn({ length: 64 })
   username: string;
 
-  @Column()
+  @Column({ length: 255 })
   password: string;
+
+  @Column({ type: 'tinyint', default: 1 })
+  active: boolean;
 }
