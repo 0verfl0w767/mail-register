@@ -18,7 +18,7 @@ export class AuthController {
 
   @Get()
   getRegisterPage(@Res() res: Response) {
-    res.sendFile(path.join(__dirname, '../../public/register.html'));
+    res.sendFile(path.join(__dirname, '../../views/register.html'));
   }
 
   @Post()
