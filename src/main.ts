@@ -8,7 +8,7 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.useGlobalPipes(new ValidationPipe());
   app.useStaticAssets(join(__dirname, '..', 'public'), {
-    prefix: '/register',
+    prefix: '/static',
   });
   await app.listen(process.env.SERVER_PORT ?? 3000);
 }
