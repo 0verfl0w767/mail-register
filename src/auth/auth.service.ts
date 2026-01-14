@@ -3,8 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { RegisterDto } from './dto/register.dto';
-import { execSync } from 'child_process';
+import { execFile } from 'child_process';
+import { promisify } from 'util';
 import { MailService } from '../mail/mail.service';
+
+const execFileAsync = promisify(execFile);
 
 @Injectable()
 export class AuthService {
@@ -22,7 +25,12 @@ export class AuthService {
 
     let hash: string;
     try {
-      hash = execSync(`openssl passwd -6 "${dto.password}"`).toString().trim();
+      const { stdout } = await execFileAsync('openssl', [
+        'passwd',
+        '-6',
+        dto.password,
+      ]);
+      hash = stdout.trim();
     } catch (err) {
       console.error('Password hashing failed:', err);
       throw new BadRequestException('서버 오류: 비밀번호 처리 실패');
