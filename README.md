@@ -29,6 +29,7 @@ OS : Ubuntu Server 22.04 LTS
         ┌────────────────────────────────────┐
         │        GitHub Actions (CI/CD)      │
         │                                    │
+        │  - Test                            │
         │  - Build                           │
         │  - Deploy                          │
         │  - Secrets                         │
