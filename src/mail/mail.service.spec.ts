@@ -38,9 +38,9 @@ describe('MailService', () => {
     });
 
     it('should throw InternalServerErrorException if maildir creation fails', async () => {
-      const mockExecAsync = jest.fn().mockRejectedValue(
-        new Error('mkdir: permission denied'),
-      );
+      const mockExecAsync = jest
+        .fn()
+        .mockRejectedValue(new Error('mkdir: permission denied'));
       service['execAsync'] = mockExecAsync;
 
       await expect(service.createMaildir(testUsername)).rejects.toThrow(

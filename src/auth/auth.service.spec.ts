@@ -51,8 +51,14 @@ describe('AuthService', () => {
 
     it('should successfully register a new user', async () => {
       mockUserRepository.findOne.mockResolvedValue(null);
-      mockUserRepository.create.mockReturnValue({ ...registerDto, password: 'hashed' });
-      mockUserRepository.save.mockResolvedValue({ ...registerDto, password: 'hashed' });
+      mockUserRepository.create.mockReturnValue({
+        ...registerDto,
+        password: 'hashed',
+      });
+      mockUserRepository.save.mockResolvedValue({
+        ...registerDto,
+        password: 'hashed',
+      });
       mockMailService.createMaildir.mockResolvedValue(undefined);
 
       await service.register(registerDto);
@@ -61,7 +67,9 @@ describe('AuthService', () => {
         where: { username: registerDto.username },
       });
       expect(mockUserRepository.save).toHaveBeenCalled();
-      expect(mockMailService.createMaildir).toHaveBeenCalledWith(registerDto.username);
+      expect(mockMailService.createMaildir).toHaveBeenCalledWith(
+        registerDto.username,
+      );
     });
 
     it('should throw BadRequestException if username already exists', async () => {
