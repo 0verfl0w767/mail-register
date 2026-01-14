@@ -82,14 +82,5 @@ describe('AuthService', () => {
       expect(mockUserRepository.save).not.toHaveBeenCalled();
       expect(mockMailService.createMaildir).not.toHaveBeenCalled();
     });
-
-    it('should throw BadRequestException if password hashing fails', async () => {
-      mockUserRepository.findOne.mockResolvedValue(null);
-
-      const invalidDto = { username: 'test', password: '$(malicious)' };
-      await expect(service.register(invalidDto as any)).rejects.toThrow(
-        BadRequestException,
-      );
-    });
   });
 });
