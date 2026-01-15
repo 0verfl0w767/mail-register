@@ -1,8 +1,14 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { JwtService } from '@nestjs/jwt';
 import { User } from './entities/user.entity';
 import { RegisterDto } from './dto/register.dto';
+import { AdminLoginDto } from './dto/admin-login.dto';
 import { execFile } from 'child_process';
 import { promisify } from 'util';
 import { MailService } from '../mail/mail.service';
@@ -18,6 +24,7 @@ export class AuthService {
     @InjectRepository(User)
     private readonly userRepo: Repository<User>,
     private readonly mailService: MailService,
+    private readonly jwtService: JwtService,
   ) {
     this.opensslPath = this.getOpenSSLPath();
   }
@@ -59,6 +66,67 @@ export class AuthService {
     await this.userRepo.save(user);
 
     await this.mailService.createMaildir(dto.username);
+  }
+
+  async adminLogin(dto: AdminLoginDto) {
+    const user = await this.userRepo.findOne({
+      where: { username: dto.username },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('사용자를 찾을 수 없습니다.');
+    }
+
+    if (!user.admin) {
+      throw new UnauthorizedException('관리자 권한이 없습니다.');
+    }
+
+    // crypt 형식 비밀번호 검증
+    const isPasswordValid = await this.verifyCryptPassword(
+      dto.password,
+      user.password,
+    );
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('비밀번호가 올바르지 않습니다.');
+    }
+
+    const payload = { username: user.username, admin: user.admin };
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
+  }
+
+  private async verifyCryptPassword(
+    password: string,
+    hash: string,
+  ): Promise<boolean> {
+    try {
+      // 해시에서 salt/rounds를 추출해 동일 파라미터로 재계산해야 검증 가능
+      const parts = hash.split('$');
+      // [$, '6', ('rounds=...' | salt), salt?, hash]
+      if (parts.length < 4 || parts[1] !== '6') return false;
+
+      let salt = '';
+      let rounds: string | undefined;
+      if (parts[2].startsWith('rounds=')) {
+        rounds = parts[2].split('=')[1];
+        salt = parts[3];
+      } else {
+        salt = parts[2];
+      }
+      if (!salt) return false;
+
+      const args = ['passwd', '-6', '-salt', salt];
+      if (rounds) {
+        args.push('-rounds', rounds);
+      }
+      args.push(password);
+
+      const { stdout } = await execFileAsync(this.opensslPath, args);
+      return stdout.trim() === hash;
+    } catch {
+      return false;
+    }
   }
 
   async getAllUsers() {

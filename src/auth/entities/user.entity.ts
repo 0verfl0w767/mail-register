@@ -10,4 +10,7 @@ export class User {
 
   @Column({ type: 'tinyint', default: 1 })
   active: boolean;
+
+  @Column({ type: 'tinyint', default: 0 })
+  admin: boolean;
 }

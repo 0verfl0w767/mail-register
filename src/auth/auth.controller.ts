@@ -9,9 +9,12 @@ import {
   Patch,
   Post,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
+import { AdminLoginDto } from './dto/admin-login.dto';
+import { JwtAuthGuard } from './jwt-auth.guard';
 import type { Response } from 'express';
 import * as path from 'path';
 
@@ -35,6 +38,24 @@ export class AuthController {
   }
 }
 
+@Controller('admin-login')
+export class AdminLoginController {
+  @Get()
+  getLoginPage(@Res() res: Response) {
+    res.sendFile(path.join(__dirname, '../../views/admin-login.html'));
+  }
+}
+
+@Controller('admin')
+export class AdminController {
+  constructor(private readonly authService: AuthService) {}
+
+  @Post('login')
+  async login(@Body() dto: AdminLoginDto) {
+    return await this.authService.adminLogin(dto);
+  }
+}
+
 @Controller('users')
 export class UsersController {
   constructor(private readonly authService: AuthService) {}
@@ -45,6 +66,7 @@ export class UsersController {
   }
 
   @Get('api')
+  @UseGuards(JwtAuthGuard)
   async getAllUsers() {
     const users = await this.authService.getAllUsers();
     return {
@@ -54,6 +76,7 @@ export class UsersController {
   }
 
   @Delete('api/:username')
+  @UseGuards(JwtAuthGuard)
   async deleteUser(@Param('username') username: string) {
     const result = await this.authService.deleteUser(username);
     return {
@@ -63,6 +86,7 @@ export class UsersController {
   }
 
   @Patch('api/:username')
+  @UseGuards(JwtAuthGuard)
   async toggleUserActive(@Param('username') username: string) {
     const result = await this.authService.toggleUserActive(username);
     return {
