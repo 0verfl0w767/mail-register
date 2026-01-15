@@ -47,10 +47,12 @@ OS : Ubuntu Server 22.04 LTS
      │                                      │
      │  NestJS API                          │
      │  - User Register / Login             │
-     │  - Password Hashing                  │
+     │  - Admin User Management             │
+     │  - JWT Authentication                │
+     │  - Password Hashing (OpenSSL)        │
      │                                      │
      │  TypeORM                             │
-     │  MariaDB                             │
+     │  MariaDB / SQLite (local)            │
      └──────────────────────────────────────┘
 
 
