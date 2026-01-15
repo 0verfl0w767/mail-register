@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BadRequestException } from '@nestjs/common';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { JwtService } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
 import { User } from './entities/user.entity';
 import { MailService } from '../mail/mail.service';
@@ -32,6 +33,12 @@ describe('AuthService', () => {
         {
           provide: MailService,
           useValue: mockMailService,
+        },
+        {
+          provide: JwtService,
+          useValue: {
+            sign: jest.fn().mockReturnValue('test-jwt-token'),
+          },
         },
       ],
     }).compile();
