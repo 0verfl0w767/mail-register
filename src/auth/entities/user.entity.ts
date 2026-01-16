@@ -8,7 +8,7 @@ export class User {
   @Column({ length: 255 })
   password: string;
 
-  @Column({ type: 'tinyint', default: 1 })
+  @Column({ type: 'tinyint', default: 0 })
   active: boolean;
 
   @Column({ type: 'tinyint', default: 0 })
