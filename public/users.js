@@ -144,7 +144,7 @@ async function toggleUserStatus(username) {
 
     if (response.ok) {
       showMessage(
-        `${username} 사용자가 ${result.data.active ? '활성화' : '비활성화화'}되었습니다.`,
+        `${username} 사용자가 ${result.data.active ? '활성화' : '비활성화'}되었습니다.`,
         'success',
       );
       loadUsers();
