@@ -79,24 +79,20 @@ button.warning:hover {
   background: #e65100;
 }
 
-.message {
+#message {
+  height: 56px;
   margin-bottom: 20px;
+}
+
+.message {
   padding: 14px 16px;
   border-radius: 4px;
   font-size: 0.9rem;
-  display: none;
   animation: slideDown 0.3s ease;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  transition: opacity 0.5s ease;
+  opacity: 0;
+  pointer-events: none;
+  display: none;
 }
 
 .message.error {
@@ -104,6 +100,7 @@ button.warning:hover {
   color: #ffebee;
   border-left: 4px solid #ff1744;
   display: block;
+  opacity: 1;
 }
 
 .message.success {
@@ -111,6 +108,11 @@ button.warning:hover {
   color: #e8f5e9;
   border-left: 4px solid #00e676;
   display: block;
+  opacity: 1;
+}
+
+.message.fade-out {
+  opacity: 0;
 }
 
 .users-table {

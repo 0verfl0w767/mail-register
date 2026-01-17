@@ -205,7 +205,10 @@ function showMessage(message, type = 'info') {
 
   if (type === 'success') {
     setTimeout(() => {
-      div.remove();
+      div.classList.add('fade-out');
+      setTimeout(() => {
+        div.remove();
+      }, 500);
     }, 3000);
   }
 }
