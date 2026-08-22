@@ -41,7 +41,7 @@ OS : Ubuntu Server 22.04 LTS
                           │ DB lookup / Auth       │             └──────────────────┘
                           │                        │
                   ┌───────┴────────────────────────▼───────┐
-                  │     Account / Registration Service    │
+                  │     Account / Registration Service     │
                   │                                        │
                   │ NestJS API                             │
                   │ - User Register / Login                │
